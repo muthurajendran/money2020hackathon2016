@@ -1,0 +1,19 @@
+{
+  "name": "pinguin_backend",
+  "version": "1.0.0",
+  "description": "Pinguin backend",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@bitbucket.org/muthurajendran/pinguin-backend.git"
+  },
+  "author": "Muthu",
+  "license": "ISC",
+  "homepage": "https://bitbucket.org/muthurajendran/pinguin-backend#readme",
+  "dependencies": {
+    "express": "^4.14.0"
+  }
+}
