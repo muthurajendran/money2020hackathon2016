@@ -35,7 +35,6 @@ router.post('/authenticate', function(req, res) {
 		} else if (user) {
 			// check if password matches
 			user.comparePassword(req.body.password, function(err, isMatch) {
-				console.log(isMatch);
         		if (err || !isMatch) {
         			 res.json({ success: false, message: 'Authentication failed. Wrong password.' });
         		} else {
