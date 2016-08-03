@@ -1,7 +1,7 @@
 'use strict';
 
 var mongoose = require('mongoose');
-mongoose.Promise = require('Promise');
+mongoose.Promise = require('promise');
 var Schema = mongoose.Schema;
 var bcrypt = require('bcrypt');
 var SALT_WORK_FACTOR = 10;
