@@ -1,7 +1,6 @@
 /**
  * Main application file
  */
-
 'use strict';
 
 process.env.NODE_ENV = process.env.NODE_ENV || 'development';
@@ -14,13 +13,10 @@ var bodyParser = require('body-parser');    // pull information from HTML POST (
 var methodOverride = require('method-override'); // simulate DELETE and PUT (express4)
 var port = process.env.PORT || 8080;
 
-
-
 //Running server and configuring port
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(methodOverride());
-
 
 /*
 * Database connection - Everything goes here
@@ -51,14 +47,21 @@ process.on('SIGINT', function() {
 //Model and Routing goes here
 var user = require('./app/v1/routes/user'); //routes are defined here
 app.use('/api',user);
+var signup = require('./app/v1/routes/signup'); //routes are defined here
+app.use('/api',signup);
 
+var error = require('./app/v1/middlewares/errors');
+
+app.use(function (err, req, res, next) {
+	console.log("error");
+});
 app.use(morgan('dev'));
 
 app.set('port', process.env.PORT || 8000);
 
-app.get('/', function(req, res) {
-    res.send('Hello! The API is at http://localhost:' + port + '/api');
-});
+// app.get('/', function(req, res) {
+//     res.send('Hello! The API is at http://localhost:' + port + '/api');
+// });
 
 var server = app.listen(app.get('port'), function() {
   console.log('Express server listening on port ' + server.address().port);
