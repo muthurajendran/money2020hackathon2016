@@ -3,9 +3,13 @@
  */
 'use strict';
 
+require('app-module-path').addPath(__dirname + '/');
+//TODOO - check for environment settings
 process.env.NODE_ENV = process.env.NODE_ENV || 'development';
+
 var express = require('express');
 var config = require('./server/config/environment');
+
 var app = express(); //Create the Express app
 var mongoose = require('mongoose');
 var morgan = require('morgan');             // log requests to the console (express4)
@@ -53,16 +57,18 @@ app.use('/api',signup);
 var error = require('./app/v1/middlewares/errors');
 
 app.use(function (err, req, res, next) {
-	console.log("error");
+	console.log(err.stack);
+	// res.json({
+	// 	success: false,
+	// 	message: err.stack,
+	// });
 });
 app.use(morgan('dev'));
 
-app.set('port', process.env.PORT || 8000);
+app.get('/', function(req, res) {
+    res.send('Hello! The API is at http://localhost:' + port + '/api');
+});
 
-// app.get('/', function(req, res) {
-//     res.send('Hello! The API is at http://localhost:' + port + '/api');
-// });
-
-var server = app.listen(app.get('port'), function() {
+var server = app.listen(config.port || 8000, function() {
   console.log('Express server listening on port ' + server.address().port);
 });

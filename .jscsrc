@@ -13,8 +13,7 @@
   "disallowSpacesInsideParentheses": true,
   "disallowTrailingWhitespace": true,
   "maximumLineLength": 150,
-  "requireCamelCaseOrUpperCaseIdentifiers": true,
-  "requireCapitalizedComments": true,
+  "requireCapitalizedComments": false,
   "requireCapitalizedConstructors": true,
   "requireCurlyBraces": true,
   "requireSpaceAfterKeywords": [

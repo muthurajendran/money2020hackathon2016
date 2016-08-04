@@ -39,11 +39,16 @@ router.post('/signup', function(req, res, next) {
         password: req.body.password,
       });
     // Save the sample user
-    user.save().then(function(err) {
-
-    }).catch(function(err) {
-        console.log('err');
+    user.save().then(function(data) {
+      res.json({
+        success: true,
+        message: 'User Created',
       });
+    })
+    .catch(function(err) {
+        return next(err);
+      });
+
     //   If (err) {
     //     return next(err);
     //   }
