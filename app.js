@@ -57,11 +57,11 @@ app.use('/api',signup);
 var error = require('./app/v1/middlewares/errors');
 
 app.use(function (err, req, res, next) {
-	console.log(err.stack);
-	// res.json({
-	// 	success: false,
-	// 	message: err.stack,
-	// });
+	//console.log(err.stack);
+	res.json({
+		success: false,
+		message: err.stack,
+	});
 });
 app.use(morgan('dev'));
 

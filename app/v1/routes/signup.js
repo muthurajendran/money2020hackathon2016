@@ -26,8 +26,36 @@ router.post('/verifyPhone', function(req, res, next) {
     });
 })
 
+
+/**
+ * @api {post} /createUser Verification for User
+ * @apiName VerifyPhone
+ * @apiGroup User
+ *
+ * @apiParam {String} username Users unique ID.
+ * @apiParam {String} phone Users phone number.
+ * @apiParam {String} countryCode Users country - default +1.
+ *
+ * @apiSuccess {String} success Success message
+ *
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       "success": true
+ *     }
+ *
+ *
+ *
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 404 Not Found
+ *     {
+ *       "error": "UserNotFound"
+ *     }
+ */
+
+
 // create a new user based on the form submission
-router.post('/createuser', function(req, res, next) {
+router.post('/createUser', function(req, res, next) {
   // Create a new user based on form parameters
   var user = new User({
     username: req.body.username,

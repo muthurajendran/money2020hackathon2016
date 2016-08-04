@@ -4,24 +4,37 @@ var User = require('../models/user');
 var express = require('express');
 var router = express.Router();
 var jwt    = require('jsonwebtoken');
+var twilio = require('twilio');
+var client = twilio('AC5eb64a1951f79369dd938c2f7b9b5ab0','584859b788496c66f1b723b053fd952d')
+
 
 /**
- * @api {post} /signup Signup for User
- * @apiName Signup
+ * @api {post} /createUser Verification for User
+ * @apiName VerifyPhone
  * @apiGroup User
  *
  * @apiParam {String} username Users unique ID.
- * @apiParam {String} email Users unique email ID.
- * @apiParam {String} password Users password.
- * @apiParam {Date} dob Users birth date.
+ * @apiParam {String} phone Users phone number.
+ * @apiParam {String} countryCode Users country - default +1.
  *
  * @apiSuccess {String} success Success message
  *
  * @apiSuccessExample Success-Response:
  *     HTTP/1.1 200 OK
  *     {
- *       "success": true
- *     }
+ *         "success": true,
+ *         "message": "User Created",
+ *         "user": {
+ *           "verifyCode": "825143",
+ *           "__v": 0,
+ *           "username": "mrii",
+ *           "phone": "2136634643",
+ *           "countryCode": "+1",
+ *           "_id": "57a2c9aec58e5c1100cfa64c",
+ *           "verified": false
+ *         }
+ *      }
+ *
  *
  *
  * @apiErrorExample Error-Response:
@@ -30,6 +43,36 @@ var jwt    = require('jsonwebtoken');
  *       "error": "UserNotFound"
  *     }
  */
+
+
+// create a new user based on the form submission
+router.post('/createUser', function(req, res, next) {
+  // Create a new user based on form parameters
+  var user = new User({
+    username: req.body.username,
+    phone: req.body.phone,
+    countryCode: req.body.countryCode || '+1',
+  });
+
+  user.save()
+  .then(function(data) {
+      return user.sendSMS();
+  })
+  .then(function(code){
+      user.verifyCode = code;
+      return user.save();
+  }).then(function(){
+    res.json({
+      success: true,
+      message: 'User Created',
+      user: user
+    });
+  })
+  .catch(function(err) {
+      return next(err);
+  });
+});
+
 
 router.post('/signup', function(req, res, next) {
     // Create a sample user
@@ -56,6 +99,7 @@ router.post('/signup', function(req, res, next) {
     //   res.json({success: true});
     // });
   });
+
 
 
 // route to authenticate a user (POST http://localhost:8080/api/authenticate)
