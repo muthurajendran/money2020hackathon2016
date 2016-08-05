@@ -7,6 +7,7 @@ require('app-module-path').addPath(__dirname + '/');
 //TODOO - check for environment settings
 process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 
+var logger = require("logger.js");
 var express = require('express');
 var config = require('./server/config/environment');
 
@@ -48,22 +49,22 @@ process.on('SIGINT', function() {
   }); 
 });
 
-//Model and Routing goes here
-var user = require('./app/v1/routes/user'); //routes are defined here
-app.use('/api',user);
-var signup = require('./app/v1/routes/signup'); //routes are defined here
-app.use('/api',signup);
+//Logger initiation
+app.use(morgan('dev'));
+logger.debug("Overriding 'Express' logger");
+app.use(require('morgan')("combined",{ "stream": logger.stream }));
 
-var error = require('./app/v1/middlewares/errors');
+app.use('/api', require('./app/v1/routes'));
 
 app.use(function (err, req, res, next) {
-	//console.log(err.stack);
+	logger.error(err);
+	console.log(err.stack);
+	res.status(500);
 	res.json({
 		success: false,
 		message: err.stack,
 	});
 });
-app.use(morgan('dev'));
 
 app.get('/', function(req, res) {
     res.send('Hello! The API is at http://localhost:' + port + '/api');

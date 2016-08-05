@@ -3,9 +3,6 @@
 var User = require('app/v1/models/user');
 var express = require('express');
 var router = express.Router();
-var twilio = require('twilio');
-
-var client = twilio('AC5eb64a1951f79369dd938c2f7b9b5ab0','584859b788496c66f1b723b053fd952d')
 
 router.post('/verifyPhone', function(req, res, next) {
   var code = Math.floor((Math.random()*999999)+111111);
@@ -25,61 +22,5 @@ router.post('/verifyPhone', function(req, res, next) {
       }
     });
 })
-
-
-/**
- * @api {post} /createUser Verification for User
- * @apiName VerifyPhone
- * @apiGroup User
- *
- * @apiParam {String} username Users unique ID.
- * @apiParam {String} phone Users phone number.
- * @apiParam {String} countryCode Users country - default +1.
- *
- * @apiSuccess {String} success Success message
- *
- * @apiSuccessExample Success-Response:
- *     HTTP/1.1 200 OK
- *     {
- *       "success": true
- *     }
- *
- *
- *
- * @apiErrorExample Error-Response:
- *     HTTP/1.1 404 Not Found
- *     {
- *       "error": "UserNotFound"
- *     }
- */
-
-
-// create a new user based on the form submission
-router.post('/createUser', function(req, res, next) {
-  // Create a new user based on form parameters
-  var user = new User({
-    username: req.body.username,
-    phone: req.body.phone,
-    countryCode: req.body.countryCode || '+1',
-  });
-
-  user.save()
-  .then(function(data) {
-      return user.sendSMS();
-  })
-  .then(function(code){
-      user.verifyCode = code;
-      return user.save();
-  }).then(function(){
-    res.json({
-      success: true,
-      message: 'User Created',
-      user: user
-    });
-  })
-  .catch(function(err) {
-      return next(err);
-  });
-});
 
 module.exports = router;
