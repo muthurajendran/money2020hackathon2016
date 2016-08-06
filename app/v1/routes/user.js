@@ -80,13 +80,13 @@ var object = {
           return User.findById(userId);
         }
         if (user._id.toString() === userId.toString()) {
-          throw('You already owe it');
+          throw('Already_Owe');
         }
-        throw('Username not available');
+        throw('Username_Not_Available');
       })
       .then(function(user) {
         if (!user) {
-          throw('User not found');
+          throw('User_Not_Found');
         }
         user.username = userName;
         return user.save();
@@ -98,15 +98,41 @@ var object = {
         });
       })
       .catch (function(err) {
-        return next(err);
+        return next({error: 'ERROR', message: err});
       });
     } catch (err) {
-      return next(err);
+      return next({error: 'ERROR', message: err});
     }
   },
 
-  verifyPhoneCode: function() {
+  verifyPhoneCode: function(req, res, next) {
+    try {
+      var userId = req.body.userId;
+      var code = req.body.phoneCode;
 
+      User.findById(userId)
+      .then(function(user) {
+        if (!user) {
+          throw('User_Not_Found');
+        }
+        if (code.toString() !== user.verifyCode.toString()) {
+          throw('Verification_Failed');
+        }
+        user.verified = true;
+        return user.save();
+      })
+      .then(function(userObj) {
+        res.json({
+          success: true,
+          user: userObj
+        });
+      })
+      .catch(function(err) {
+        return next({error: 'ERROR', message: err});
+      });
+    } catch (err) {
+      return next({error: 'ERROR', message: err});
+    }
   }
 
 };
