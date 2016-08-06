@@ -11,7 +11,6 @@
       "beforeOpeningRoundBrace": true
   },
   "disallowSpacesInsideParentheses": true,
-  "disallowTrailingWhitespace": true,
   "maximumLineLength": 150,
   "requireCapitalizedComments": false,
   "requireCapitalizedConstructors": true,

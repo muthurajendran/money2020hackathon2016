@@ -58,11 +58,11 @@ app.use('/api', require('./app/v1/routes'));
 
 app.use(function (err, req, res, next) {
 	logger.error(err);
-	console.log(err.stack);
+	console.log(err);
 	res.status(500);
 	res.json({
 		success: false,
-		message: err.stack,
+		message: err,
 	});
 });
 
