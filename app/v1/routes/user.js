@@ -173,22 +173,29 @@ var object = {
   },
 
 
-  // updateLocation: function(req, res next) {
-  //   try {
-  //     var userId = req.body.userId;
+  updateUserLocation: function(req, res, next) {
+    try {
+      var userId = req.body.userId;
 
-  //     User.findById(userId)
-  //     .then(function(user) {
-  //       user.location = '';
-  //     })
-  //     .catch( function(err) {
-  //       return next({error: 'ERROR', message: err });
-  //     })
+      User.findById(userId)
+      .then(function(user) {
+        user.location.coordinates = [req.body.longitude,req.body.latitude];
+        return user.save();
+      })
+      .then(function(data) {
+        res.json({
+          success: true,
+          user: data
+        });
+      })
+      .catch(function(err) {
+        return next({error: 'ERROR', message: err });
+      });
 
-  //   } catch(err) {
-  //     return next({error: 'ERROR', message: err});
-  //   }
-  // }
+    } catch (err) {
+      return next({error: 'ERROR', message: err});
+    }
+  }
 
 };
 

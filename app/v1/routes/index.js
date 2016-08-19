@@ -9,6 +9,7 @@ router.post('/createUser', user.createUser);
 router.post('/createUsername', user.createUsername);
 router.post('/verifyPhoneCode', user.verifyPhoneCode);
 router.post('/resendPhoneCode', user.resendPhoneCode);
+router.post('/updateUserLocation',user.updateUserLocation);
 
 // Photo activity api's
 router.post('/uploadPhoto',photo.uploadPhoto);
