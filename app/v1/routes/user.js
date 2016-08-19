@@ -1,6 +1,8 @@
 'use strict';
 
 var User = require('../models/user');
+// var config = require('server/config/environment');
+// var Firebase = require('firebase');
 
 var object = {
   /**
@@ -45,9 +47,11 @@ var object = {
         countryCode: req.body.countryCode || '+1',
       });
 
-      user.save()
-      .then(function(user) {
-        console.log(user);
+      User.findOne({phone: user.phone, countryCode: user.countryCode })
+      .then(function(userObj) {
+        if (userObj) {
+          user = userObj;
+        }
         return user.sendSMS();
       })
       .then(function(code) {
@@ -57,15 +61,15 @@ var object = {
       .then(function(data) {
         res.json({
           success: true,
-          message: 'User Created',
+          message: 'User_Created',
           user: data
         });
       })
       .catch(function(err) {
-          return next(err);
+          return next({error: 'ERROR', message: err});
         });
     } catch (err) {
-      return next(err);
+      return next({error: 'ERROR', message: err});
     }
   },
 
@@ -89,6 +93,39 @@ var object = {
           throw('User_Not_Found');
         }
         user.username = userName;
+        return user.save();
+      })
+      .then(function(data) {
+        res.json({
+          success: true,
+          user: data
+        });
+      })
+      .catch (function(err) {
+        return next({error: 'ERROR', message: err});
+      });
+    } catch (err) {
+      return next({error: 'ERROR', message: err});
+    }
+  },
+
+  resendPhoneCode: function(req, res, next) {
+    try {
+      var phoneNum = req.body.phone;
+      var countryCode = req.body.countryCode;
+      var user = '';
+
+      User.findOne({phone: phoneNum, countryCode: countryCode})
+      .then(function(userObj) {
+        user = userObj;
+        if (!user) {
+          throw('User_Not_Found');
+        }
+        user.countryCode = countryCode || '+1';
+        return user.sendSMS();
+      })
+      .then(function(code) {
+        user.verifyCode = code;
         return user.save();
       })
       .then(function(data) {
@@ -133,7 +170,25 @@ var object = {
     } catch (err) {
       return next({error: 'ERROR', message: err});
     }
-  }
+  },
+
+
+  // updateLocation: function(req, res next) {
+  //   try {
+  //     var userId = req.body.userId;
+
+  //     User.findById(userId)
+  //     .then(function(user) {
+  //       user.location = '';
+  //     })
+  //     .catch( function(err) {
+  //       return next({error: 'ERROR', message: err });
+  //     })
+
+  //   } catch(err) {
+  //     return next({error: 'ERROR', message: err});
+  //   }
+  // }
 
 };
 

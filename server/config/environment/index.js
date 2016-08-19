@@ -40,6 +40,13 @@ var all = {
         session: 'pinguinBackendIAuthorizeAllRequests'
     },
 
+    firebase: {
+	    apiKey: "AIzaSyD7QxcBNYgPOvnfOS2XYtwfSTIFoBIDKOY",
+	    authDomain: "pinguin-f2b35.firebaseapp.com",
+	    databaseURL: "https://pinguin-f2b35.firebaseio.com",
+	    storageBucket: "pinguin-f2b35.appspot.com",
+  	},
+
     // List of user roles
     userRoles: ['guest', 'user', 'admin'],
 

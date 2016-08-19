@@ -54,7 +54,7 @@ app.use(morgan('dev'));
 logger.debug("Overriding 'Express' logger");
 app.use(require('morgan')("combined",{ "stream": logger.stream }));
 
-app.use('/api', require('./app/v1/routes'));
+app.use('/'+config.appVersion+'/api', require('./app/'+config.appVersion+'/routes'));
 
 app.use(function (err, req, res, next) {
 	logger.error(err);
@@ -67,7 +67,7 @@ app.use(function (err, req, res, next) {
 });
 
 app.get('/', function(req, res) {
-    res.send('Hello! The API is at http://localhost:' + port + '/api');
+    res.send('Hello! The API is at http://localhost:' + port + '/'+config.appVersion+'/api');
 });
 
 var server = app.listen(config.port || 8000, function() {
