@@ -14,8 +14,11 @@ router.post('/updateUserLocation',user.updateUserLocation);
 
 // Photo activity api's
 router.post('/uploadPhoto',photo.uploadPhoto);
+router.post('/addReaction',photo.addReaction);
 
 // Feed api
 router.post('/userFeed',feed.userFeed);
+router.post('/getLocationName',feed.getLocationName);
+
 
 module.exports = router;

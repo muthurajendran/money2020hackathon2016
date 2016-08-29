@@ -18,6 +18,15 @@ var photoSchema = new Schema({
       type: { type: String, default: 'Point' },
       coordinates: {type: [Number], default: [0,0] }
     },
+
+    reactions: {
+      thumbsUp: [{ type: Schema.Types.ObjectId, ref: 'User', default: [] }],
+      sad: [{ type: Schema.Types.ObjectId, ref: 'User', default: [] }],
+      lol: [{ type: Schema.Types.ObjectId, ref: 'User', default: [] }],
+      heart: [{ type: Schema.Types.ObjectId, ref: 'User', default: [] }],
+      surprise: [{ type: Schema.Types.ObjectId, ref: 'User', default: [] }],
+      angry: [{ type: Schema.Types.ObjectId, ref: 'User', default: [] }]
+    }
   },
   {
     timestamps: true
