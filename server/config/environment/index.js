@@ -23,6 +23,14 @@ var all = {
 
     authyKey: 'OrvCnIKRG6HwmDdf0Q3li7WczwfGV5u2',
 
+    geocoder: {
+        provider: 'google',
+        // Optional depending on the providers 
+        httpAdapter: 'https', // Default 
+        apiKey: 'AIzaSyB0nxzzgvNucCBQtxuJ5zRCXBvyrFcSVNI',
+        formatter: null
+    },
+    
     twilio: {
     	accountSid: 'AC5eb64a1951f79369dd938c2f7b9b5ab0',
     	authToken: '584859b788496c66f1b723b053fd952d',

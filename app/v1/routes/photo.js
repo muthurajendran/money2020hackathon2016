@@ -1,6 +1,7 @@
 'use strict';
 
 var Photo = require('../models/photo');
+var geocoder = require('app/v1/middlewares/geocoder');
 // var config = require('server/config/environment');
 
 var object = {
@@ -15,8 +16,12 @@ var object = {
         },
         userId: req.body.userId
       });
-
-      photo.save()
+      
+      geocoder.getLocationName(req.body.latitude,req.body.longitude)
+      .then(function(locationName) {
+        photo.locationName = locationName;
+        return photo.save()
+      })
       .then(function(data) {
         res.json({
           success: true,
