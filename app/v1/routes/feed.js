@@ -12,6 +12,7 @@ var object = {
       .then(function(photos) {
         res.json({
           success: true,
+          count: photos.length,
           data: photos
         });
       })
