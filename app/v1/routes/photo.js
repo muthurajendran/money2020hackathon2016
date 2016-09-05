@@ -23,7 +23,7 @@ var object = {
   uploadPhoto: function(req, res, next) {
     try {
       if (req.file && req.file.cloudStoragePublicUrl) {
-        var photo = new Photo({
+        var newPhoto = new Photo({
           url: req.file.cloudStoragePublicUrl,
           location: { 
             type: 'Point',
@@ -34,14 +34,19 @@ var object = {
 
         geocoder.getLocationName(req.body.latitude,req.body.longitude)
         .then(function(locationName) {
-          photo.locationName = locationName;
-          return photo.save();
+          newPhoto.locationName = locationName;
+          return newPhoto.save();
+        })
+        .then(function(savedPhoto) {
+          return Photo.find({
+            location: { $geoWithin: { $centerSphere: [ [ parseFloat(req.body.longitude), parseFloat(req.body.latitude) ], 3 / 3963.2 ] } }
+          }).populate(['reactions.sad','reactions.surprise','reactions.angry','reactions.lol','reactions.heart','reactions.thumbsUp']); 
         })
         .then(function(data) {
           res.json({
             success: true,
             message: 'Photo_Created',
-            photo: data
+            feed: data
           });
         })
         .catch(function(err) {
