@@ -27,8 +27,14 @@ var all = {
         provider: 'google',
         // Optional depending on the providers 
         httpAdapter: 'https', // Default 
-        apiKey: 'AIzaSyB0nxzzgvNucCBQtxuJ5zRCXBvyrFcSVNI',
+        apiKey: 'AIzaSyA9t38XAVh8xeZU3w_vsTepG090q4tAysc',
         formatter: null
+    },
+
+    gcloud:{
+        "CLOUD_BUCKET": "pinguindev-142418",
+        "GCLOUD_PROJECT": "pinguindev-142418",
+        "key": "AIzaSyA9t38XAVh8xeZU3w_vsTepG090q4tAysc"
     },
     
     twilio: {

@@ -5,33 +5,51 @@ var geocoder = require('app/v1/middlewares/geocoder');
 // var config = require('server/config/environment');
 
 var object = {
+
+  // uploadPhotoCloud: function(req, res, next) {
+  //   var data = req.body;
+  //   // Was an image uploaded? If so, we'll use its public URL
+  //   // in cloud storage.
+  //   if (req.file && req.file.cloudStoragePublicUrl) {
+  //     data.imageUrl = req.file.cloudStoragePublicUrl;
+  //   }
+
+  //   res.json({
+  //     success: true,
+  //     data: data
+  //   });
+  // },
   // API function code goes here 
   uploadPhoto: function(req, res, next) {
     try {
-      var photo = new Photo({
-        url: req.body.url,
-        location: { 
-          type: 'Point',
-          coordinates: [req.body.longitude,req.body.latitude],
-        },
-        userId: req.body.userId
-      });
-
-      geocoder.getLocationName(req.body.latitude,req.body.longitude)
-      .then(function(locationName) {
-        photo.locationName = locationName;
-        return photo.save();
-      })
-      .then(function(data) {
-        res.json({
-          success: true,
-          message: 'Photo_Created',
-          photo: data
+      if (req.file && req.file.cloudStoragePublicUrl) {
+        var photo = new Photo({
+          url: req.file.cloudStoragePublicUrl,
+          location: { 
+            type: 'Point',
+            coordinates: [req.body.longitude,req.body.latitude],
+          },
+          userId: req.body.userId
         });
-      })
-      .catch(function(err) {
-        return next({error: 'ERROR', message: err});
-      });
+
+        geocoder.getLocationName(req.body.latitude,req.body.longitude)
+        .then(function(locationName) {
+          photo.locationName = locationName;
+          return photo.save();
+        })
+        .then(function(data) {
+          res.json({
+            success: true,
+            message: 'Photo_Created',
+            photo: data
+          });
+        })
+        .catch(function(err) {
+          return next({error: 'ERROR', message: err});
+        });
+      } else {
+        return next({error: 'PHOTO_NOT_CREATED', message: req.body});
+      }
     } catch (err) {
       return next({error: 'ERROR', message: err});
     }
