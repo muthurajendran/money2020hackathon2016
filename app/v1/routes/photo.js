@@ -6,20 +6,6 @@ var geocoder = require('app/v1/middlewares/geocoder');
 
 var object = {
 
-  // uploadPhotoCloud: function(req, res, next) {
-  //   var data = req.body;
-  //   // Was an image uploaded? If so, we'll use its public URL
-  //   // in cloud storage.
-  //   if (req.file && req.file.cloudStoragePublicUrl) {
-  //     data.imageUrl = req.file.cloudStoragePublicUrl;
-  //   }
-
-  //   res.json({
-  //     success: true,
-  //     data: data
-  //   });
-  // },
-  // API function code goes here 
   uploadPhoto: function(req, res, next) {
     try {
       if (req.file && req.file.cloudStoragePublicUrl) {
@@ -36,11 +22,6 @@ var object = {
         .then(function(locationName) {
           newPhoto.locationName = locationName;
           return newPhoto.save();
-        })
-        .then(function(savedPhoto) {
-          return Photo.find({
-            location: { $geoWithin: { $centerSphere: [ [ parseFloat(req.body.longitude), parseFloat(req.body.latitude) ], 3 / 3963.2 ] } }
-          }).populate(['reactions.sad','reactions.surprise','reactions.angry','reactions.lol','reactions.heart','reactions.thumbsUp']); 
         })
         .then(function(data) {
           res.json({

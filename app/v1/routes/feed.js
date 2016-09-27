@@ -2,18 +2,31 @@
 
 var geocoder = require('app/v1/middlewares/geocoder');
 var Photo = require('../models/photo');
+var User = require('../models/user');
 
 var object = {
   userFeed: function(req, res, next) {
     try {
+      var radius = req.body.radius || 3;
+      var photosFeed = '';
+      var userObj = '';
+
       Photo.find({
-        location: { $geoWithin: { $centerSphere: [ [ req.body.longitude, req.body.latitude ], 3 / 3963.2 ] } }
-      }).populate(['reactions.sad','reactions.surprise','reactions.angry','reactions.lol','reactions.heart','reactions.thumbsUp'])
+        location: { $geoWithin: { $centerSphere: [ [ req.body.longitude, req.body.latitude ], parseFloat(radius) / 3963.2 ] } }
+      })
+      .sort({updatedAt: -1})
+      .populate(['reactions.sad','reactions.surprise','reactions.angry','reactions.lol','reactions.heart','reactions.thumbsUp','userId'])
       .then(function(photos) {
+        photosFeed = photos;
+        return User.findById(req.body.userId);
+      })
+      .then(function(user) {
+        userObj = user;
         res.json({
           success: true,
-          count: photos.length,
-          data: photos
+          count: photosFeed.length,
+          feed: photosFeed,
+          user: userObj
         });
       })
       .catch(function(err) {

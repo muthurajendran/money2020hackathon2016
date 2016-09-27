@@ -1,7 +1,8 @@
 'use strict';
 
 var User = require('../models/user');
-// var config = require('server/config/environment');
+var ejabberd = require('app/v1/middlewares/ejabberd');
+var config = require('server/config/environment');
 // var Firebase = require('firebase');
 
 var object = {
@@ -77,6 +78,7 @@ var object = {
     try {
       var userId = req.body.userId;
       var userName = req.body.username;
+      var userGlobal = '';
 
       User.findOne({username: userName })
       .then(function(user) {
@@ -95,10 +97,16 @@ var object = {
         user.username = userName;
         return user.save();
       })
+      .then(function(user) {
+        userGlobal = user;
+        var params = {host: config.ejabberd.userHost, user: user.username, password: config.ejabberd.userPassword};
+        return ejabberd.register(params);
+      })
       .then(function(data) {
         res.json({
           success: true,
-          user: data
+          user: userGlobal,
+          ejabberd: data
         });
       })
       .catch (function(err) {
@@ -156,6 +164,9 @@ var object = {
           throw('Verification_Failed');
         }
         user.verified = true;
+        return user.createAccessToken();
+      })
+      .then(function(user) {
         return user.save();
       })
       .then(function(userObj) {

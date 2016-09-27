@@ -11,7 +11,7 @@ var Schema = mongoose.Schema;
 
 var photoSchema = new Schema({
     url: {type: String, required: true},
-    userId: {type: String, required: true},
+    userId: {type: Schema.Types.ObjectId, ref: 'User', required: true},
 
     locationName: String,
     location: {

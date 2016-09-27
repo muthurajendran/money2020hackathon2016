@@ -12,6 +12,7 @@ module.exports = {
     return new Promise(function(resolve, reject) {
       geocoder.reverse({lat: latitude, lon: longitude}).then(function(res) {
         if (res[0].extra.neighborhood) {
+          console.log(res);
           resolve(res[0].extra.neighborhood);
         } else {
           resolve(res[0].city);

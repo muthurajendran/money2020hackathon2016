@@ -8,6 +8,7 @@ var Schema = mongoose.Schema;
 var config = require('server/config/environment');
 var Promise = require('promise');
 var logger = require('logger.js');
+var uuid = require('node-uuid');
 
 var twilio = require('twilio');
 var client = twilio(config.twilio.accountSid,config.twilio.authToken);
@@ -50,6 +51,14 @@ userSchema.methods.sendSMS = function() {
       });
     });
   };
+
+userSchema.methods.createAccessToken = function() {
+  var self = this;
+  return new Promise(function(resolve) {
+    self.accessToken = uuid.v4();
+    resolve(self);
+  });
+};
 
 // userSchema.pre('save', function(next) {
 //     var user = this;

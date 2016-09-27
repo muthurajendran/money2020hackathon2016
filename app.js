@@ -23,6 +23,10 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(methodOverride());
 
+var ejabberd = require('app/v1/middlewares/ejabberd');
+
+//ejabberd.ejabberdConnect();
+
 /*
 * Database connection - Everything goes here
 */
@@ -73,3 +77,5 @@ app.get('/', function(req, res) {
 var server = app.listen(config.port || 8000, function() {
   console.log('Express server listening on port ' + server.address().port);
 });
+
+//ejabberd.connectE();

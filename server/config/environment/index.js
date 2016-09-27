@@ -21,6 +21,15 @@ var all = {
     // Server port
     port: process.env.PORT || 8000,
 
+    ejabberd: {
+        host: '104.154.120.49',
+        port: 4560,
+        userHost: '104.154.120.49',
+        userPassword: 'pinguin'
+    },
+
+    accessSecretKey: 'pinguinBackendSecretForever',
+
     authyKey: 'OrvCnIKRG6HwmDdf0Q3li7WczwfGV5u2',
 
     geocoder: {
