@@ -76,36 +76,31 @@ var object = {
 
   createUsername: function(req, res, next) {
     try {
-      var userId = req.body.userId;
+      var requestUser = req.user;
       var userName = req.body.username;
-      var userGlobal = '';
 
       User.findOne({username: userName })
-      .then(function(user) {
-        if (!user) {
-          return User.findById(userId);
+      .then(function(existingUser) {
+        // No user found so assign and remove existing jabber account and save
+        if (!existingUser) {
+          var params = {host: config.ejabberd.userHost, user: requestUser.username};
+          requestUser.username = userName;
+          return requestUser.save().then(ejabberd.unregister(params));
         }
-        if (user._id.toString() === userId.toString()) {
+        // if found check he has it already
+        if (existingUser._id.toString() === requestUser._id.toString()) {
           throw('Already_Owe');
         }
         throw('Username_Not_Available');
       })
       .then(function(user) {
-        if (!user) {
-          throw('User_Not_Found');
-        }
-        user.username = userName;
-        return user.save();
-      })
-      .then(function(user) {
-        userGlobal = user;
         var params = {host: config.ejabberd.userHost, user: user.username, password: config.ejabberd.userPassword};
         return ejabberd.register(params);
       })
       .then(function(data) {
         res.json({
           success: true,
-          user: userGlobal,
+          user: requestUser,
           ejabberd: data
         });
       })
@@ -186,13 +181,11 @@ var object = {
 
   updateUserLocation: function(req, res, next) {
     try {
-      var userId = req.body.userId;
+      var requestUser = req.user;
+      
+      requestUser.location.coordinates = [req.body.longitude,req.body.latitude];
 
-      User.findById(userId)
-      .then(function(user) {
-        user.location.coordinates = [req.body.longitude,req.body.latitude];
-        return user.save();
-      })
+      requestUser.save()
       .then(function(data) {
         res.json({
           success: true,

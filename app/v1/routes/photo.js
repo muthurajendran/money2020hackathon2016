@@ -15,7 +15,7 @@ var object = {
             type: 'Point',
             coordinates: [req.body.longitude,req.body.latitude],
           },
-          userId: req.body.userId
+          userId: req.user._id.toString()
         });
 
         geocoder.getLocationName(req.body.latitude,req.body.longitude)
@@ -55,15 +55,15 @@ var object = {
 
       Photo.findById(req.body.photoId)
       .then(function(photo) {
-        photo.reactions.angry.remove(req.body.userId);
-        photo.reactions.surprise.remove(req.body.userId);
-        photo.reactions.heart.remove(req.body.userId);
-        photo.reactions.lol.remove(req.body.userId);
-        photo.reactions.sad.remove(req.body.userId);
-        photo.reactions.thumbsUp.remove(req.body.userId);
+        photo.reactions.angry.remove(req.user._id);
+        photo.reactions.surprise.remove(req.user._id);
+        photo.reactions.heart.remove(req.user._id);
+        photo.reactions.lol.remove(req.user._id);
+        photo.reactions.sad.remove(req.user._id);
+        photo.reactions.thumbsUp.remove(req.user._id);
 
         console.log(conf[req.body.type]);
-        photo.reactions[conf[req.body.type]].push(req.body.userId);
+        photo.reactions[conf[req.body.type]].push(req.user._id);
         return photo.save();
       })
       .then(function(photo1) {

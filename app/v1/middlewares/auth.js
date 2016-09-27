@@ -13,6 +13,8 @@ function auth(req, res, next) {
     if (!user) {
       return res.json({ success: false, message: 'Failed to authenticate token.'}); 
     } 
+    req.isValid = true;
+    req.user = user;
     next();
   });
 }
