@@ -12,6 +12,7 @@ module.exports = {
           console.log('error:', error);
           reject('User jabberId already exists');
         } else {
+          console.log('registering : ', params.user);
           value.jabber_id = params.user + '@' + params.host;
           resolve(value);
         }
@@ -27,6 +28,7 @@ module.exports = {
           console.log('error:', error);
           resolve('User jabberId not exists');
         } else {
+          console.log('deleting : ', params.user);
           value.jabber_id = params.user + '@' + params.host;
           resolve(value);
         }

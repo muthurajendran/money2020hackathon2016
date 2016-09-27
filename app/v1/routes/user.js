@@ -85,7 +85,16 @@ var object = {
         if (!existingUser) {
           var params = {host: config.ejabberd.userHost, user: requestUser.username};
           requestUser.username = userName;
-          return requestUser.save().then(ejabberd.unregister(params));
+
+          return ejabberd.unregister(params)
+          .then(function() {
+            var params = {host: config.ejabberd.userHost, user: requestUser.username, password: config.ejabberd.userPassword};
+            return ejabberd.register(params);
+          })
+          .then(function() {
+            requestUser.jabberId = requestUser.username + '@' + config.ejabberd.userHost;
+            return requestUser.save();
+          });
         }
         // if found check he has it already
         if (existingUser._id.toString() === requestUser._id.toString()) {
@@ -93,15 +102,10 @@ var object = {
         }
         throw('Username_Not_Available');
       })
-      .then(function(user) {
-        var params = {host: config.ejabberd.userHost, user: user.username, password: config.ejabberd.userPassword};
-        return ejabberd.register(params);
-      })
-      .then(function(data) {
+      .then(function() {
         res.json({
           success: true,
-          user: requestUser,
-          ejabberd: data
+          user: requestUser
         });
       })
       .catch (function(err) {

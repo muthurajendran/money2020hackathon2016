@@ -21,6 +21,7 @@ var userSchema = new Schema({
     accessToken: String,
     deviceToken: String,
     verifyCode: String,
+    jabberId: String,
     locationName: String,
     location: {
       type: { type: String, default: 'Point' },
