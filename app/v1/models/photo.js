@@ -4,10 +4,6 @@ var mongoose = require('mongoose');
 mongoose.Promise = require('promise');
 
 var Schema = mongoose.Schema;
-// var config = require('server/config/environment');
-
-// var Promise = require('promise');
-// var logger = require('logger.js');
 
 var photoSchema = new Schema({
     url: {type: String, required: true},

@@ -24,6 +24,7 @@ var all = {
     ejabberd: {
         host: '104.154.120.49',
         port: 4560,
+        service: 'conference',
         userHost: '104.154.120.49',
         userPassword: 'pinguin'
     },

@@ -62,7 +62,6 @@ var object = {
         photo.reactions.sad.remove(req.user._id);
         photo.reactions.thumbsUp.remove(req.user._id);
 
-        console.log(conf[req.body.type]);
         photo.reactions[conf[req.body.type]].push(req.user._id);
         return photo.save();
       })

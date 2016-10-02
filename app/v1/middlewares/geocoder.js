@@ -5,9 +5,7 @@ var config = require('server/config/environment');
 var geocoder = NodeGeocoder(config.geocoder);
 var Promise = require('promise');
 
-
-module.exports = {
-	
+module.exports = {	
   getLocationName: function(latitude, longitude) {
     return new Promise(function(resolve, reject) {
       geocoder.reverse({lat: latitude, lon: longitude}).then(function(res) {
