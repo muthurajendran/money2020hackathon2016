@@ -74,7 +74,6 @@ var object = {
     } catch (err) {
       return next({error: 'ERROR', message: err});
     }
-
   }
 
 };
