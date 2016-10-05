@@ -12,7 +12,7 @@ var auth = require('app/v1/middlewares/auth');
 router.post('/createUser', user.createUser);
 router.post('/verifyPhoneCode', user.verifyPhoneCode);
 router.post('/resendPhoneCode', user.resendPhoneCode);
-router.post('/createUsername', user.createUsername);
+router.post('/createUsername', auth, user.createUsername);
 router.post('/updateUserLocation', auth, user.updateUserLocation);
 
 // Photo activity api's

@@ -42,22 +42,17 @@ var object = {
 
   createUsername: function(req, res, next) {
     try {
-      var userId = req.body.userId;
-      var requestUser = '';
+      var requestUser = req.user;
       var userName = req.body.username;
 
       User.findOne({username: userName })
       .then(function(existingUser) {
         // No user found so assign and remove existing jabber account and save
         if (!existingUser) {
-          var params = {host: config.ejabberd.userHost, user: userName};
+          var params = {host: config.ejabberd.userHost, user: requestUser.username};
+          requestUser.username = userName;
 
-          return User.findOne({_id: userId })
-          .then(function(user) {
-            requestUser = user;
-            requestUser.username = userName;
-            return ejabberd.unregister(params)
-          }) 
+          return ejabberd.unregister(params)
           .then(function() {
             var params = {host: config.ejabberd.userHost, user: requestUser.username, password: config.ejabberd.userPassword};
             return ejabberd.register(params);
@@ -68,7 +63,7 @@ var object = {
           });
         }
         // if found check he has it already
-        if (existingUser._id.toString() === userId.toString()) {
+        if (existingUser._id.toString() === requestUser._id.toString()) {
           throw('Already_Owe');
         }
         throw('Username_Not_Available');
