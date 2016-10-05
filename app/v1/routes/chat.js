@@ -47,8 +47,7 @@ var object = {
     try {
       // find all users within the radius set
       var user = req.user;
-      console.log(user);
-      var radius = req.body.radius;
+      var radius = req.body.radius || config.defaultRadiusForChat || 3;
       User.find({
         _id: { $ne: user._id},
         chatroomId: { $exists: true},

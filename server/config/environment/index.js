@@ -21,6 +21,8 @@ var all = {
     // Server port
     port: process.env.PORT || 8000,
 
+    defaultRadiusForChat: 3,
+
     ejabberd: {
         host: '104.154.120.49',
         port: 4560,
