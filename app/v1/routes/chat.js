@@ -1,6 +1,6 @@
 'use strict';
 
-var Chatroom = require('../models/Chatroom');
+var Chatroom = require('../models/chatroom');
 var ejabberd = require('app/v1/middlewares/ejabberd');
 var config = require('server/config/environment');
 var uuid = require('node-uuid');
