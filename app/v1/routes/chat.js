@@ -6,6 +6,7 @@ var config = require('server/config/environment');
 var uuid = require('node-uuid');
 var User = require('../models/user');
 var logger = require('app/v1/middlewares/elog');
+var _ = require('lodash');
 
 var object = {
   createRoom: function(req, res, next) {
@@ -36,7 +37,7 @@ var object = {
         return next({error: 'ERROR', message: err });
       });
     } catch (err) {
-      return next({error: 'ERROR', message: err});
+      return next({error: 'ERROR', message: err.stack});
     }
   },
 
@@ -54,11 +55,23 @@ var object = {
         location: { $geoWithin: { $centerSphere: [ [ user.location.coordinates[0], user.location.coordinates[1] ], parseFloat(radius) / 3963.2 ] } }
       })
       .populate('chatroomId')
-      .then(function(value) {  
-        res.json({
-          success: true,
-          value: value[0].chatroomId
-        });
+      .then(function(users) { 
+        if (users.length > 0) {
+          req.response = users[0].chatroomId;
+          next();
+        } else {
+          // create a chatroom and then shoot the id
+          var chatroom = new Chatroom();
+          chatroom.createRoom()
+          .then(function(room) {
+            user.chatroomId = room._id.toString();
+            return user.save();
+          })
+          .then(function() {
+            req.response = chatroom;
+            next();
+          });
+        }
       })
       .catch(function(err) {
         return next({error: 'ERROR', message: err });
@@ -71,7 +84,76 @@ var object = {
       // if found return the chatroom id
 
     } catch (err) {
-      return next({error: 'ERROR', message: err});
+      return next({error: 'ERROR', message: err.stack});
+    }
+  },
+
+  /*
+  * Get room Users
+  */
+
+  getRoomPeople: function(req, res, next) {
+    try {
+      // find all users within the radius set
+      var user = req.user;
+      var roomId = req.body.roomId;
+      var room_name = roomId.split('@')[0];
+      var room_service = roomId.split('@')[1];
+      console.log(room_name, room_service);
+
+      var params = {
+        name: room_name,
+        service: room_service
+      };
+
+      ejabberd.getRoomUsers(params)
+      .then(function(value) {
+        console.log(value);
+        res.json({
+          success: true,
+          value: value
+        });
+      })
+      .catch(function(err) {
+        return next({error: 'ERROR', message: err });
+      });
+    } catch (err) {
+      return next({error: 'ERROR', message: err.stack});
+    }
+  },
+
+  /*
+  * send message
+  */
+
+  sendMessage: function(req, res, next) {
+    try {
+      // find all users within the radius set
+      var user = req.user;
+      var roomId = req.body.roomId;
+      var type = 'groupchat'
+
+      var params = {
+        type: type,
+        from: 'admin@104.154.120.49',
+        to: roomId,
+        subject: 'subject',
+        body: 'sssss'
+      };
+
+      ejabberd.sendMessage(params)
+      .then(function(value) {
+        console.log(value);
+        res.json({
+          success: true,
+          value: value
+        });
+      })
+      .catch(function(err) {
+        return next({error: 'ERROR', message: err });
+      });
+    } catch (err) {
+      return next({error: 'ERROR', message: err.stack});
     }
   }
 

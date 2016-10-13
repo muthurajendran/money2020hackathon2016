@@ -37,7 +37,7 @@ var object = {
         return next({error: 'PHOTO_NOT_CREATED', message: req.body});
       }
     } catch (err) {
-      return next({error: 'ERROR', message: err});
+      return next({error: 'ERROR', message: err.stack});
     }
   },
 
@@ -76,7 +76,7 @@ var object = {
         return next({error: 'ERROR', message: err});
       });
     } catch (err) {
-      return next({error: 'ERROR', message: err});
+      return next({error: 'ERROR', message: err.stack});
     }
   }
 };

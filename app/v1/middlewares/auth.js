@@ -4,6 +4,8 @@ var User = require('../models/user');
 
 function auth(req, res, next) {
   var token = req.body.access_token || req.query.access_token || req.headers['x-access-token'];
+  token = token.toString();
+
   console.log('Token: ',token);
   if (!token) {
     res.status(401);

@@ -78,7 +78,7 @@ var object = {
         return next({error: 'ERROR', message: err});
       });
     } catch (err) {
-      return next({error: 'ERROR', message: err});
+      return next({error: 'ERROR', message: err.stack});
     }
   },
 
@@ -111,7 +111,7 @@ var object = {
         return next({error: 'ERROR', message: err});
       });
     } catch (err) {
-      return next({error: 'ERROR', message: err});
+      return next({error: 'ERROR', message: err.stack});
     }
   },
 
@@ -144,7 +144,7 @@ var object = {
         return next({error: 'ERROR', message: err});
       });
     } catch (err) {
-      return next({error: 'ERROR', message: err});
+      return next({error: 'ERROR', message: err.stack});
     }
   },
 
@@ -167,7 +167,7 @@ var object = {
       });
 
     } catch (err) {
-      return next({error: 'ERROR', message: err});
+      return next({error: 'ERROR', message: err.stack});
     }
   }
 
