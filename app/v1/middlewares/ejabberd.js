@@ -3,6 +3,7 @@ var xmlrpc = require('xmlrpc');
 var config = require('server/config/environment');
 var logger = require('app/v1/middlewares/elog');
 var Promise = require('promise');
+var User = require('../models/user');
 
 function call(method_name, params) {
   return new Promise(function(resolve, reject) {
@@ -17,13 +18,42 @@ function call(method_name, params) {
   });
 }
 
+function fn(occupant) {
+  return new Promise(function(resolve, reject) {
+    var found = false;
+    var value = '';
+    for (var i = occupant.occupant.length - 1; i >= 0; i--) {
+      if (occupant.occupant[i].nick) {
+        found = true;
+        value = occupant.occupant[i].nick;
+        break;
+      }
+    }
+    if (found) {
+      found = false;
+      resolve(value);
+    } else if (i === 0) {
+      reject(undefined);
+    }
+  });
+}
+
 module.exports = {  
   getRoomUsers: function(params) {
     return new Promise(function(resolve, reject) {
       call('get_room_occupants',params)
       .then(function(value) {
-        logger.info(params, 'getting users: ');
-        resolve(value);
+        // map all for jabberids
+        var result = Promise.all(value.occupants.map(fn));
+
+        result.then(function(data) {
+          console.log(data);
+          return User.find({ 
+            jabberId: { $in: data }
+          });
+        }).then(function(users) {
+          resolve(users);
+        });
       })
       .catch(function(err) {
         logger.error(err);

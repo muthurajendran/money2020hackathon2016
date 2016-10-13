@@ -43,7 +43,7 @@ var object = {
   createUsername: function(req, res, next) {
     try {
       var requestUser = req.user;
-      var userName = req.body.username;
+      var userName = req.body.username.toLowerCase();
 
       User.findOne({username: userName })
       .then(function(existingUser) {

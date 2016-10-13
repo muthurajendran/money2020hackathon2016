@@ -29,6 +29,7 @@ router.post('/getLocationName', feed.getLocationName);
 // Chat room
 router.post('/chat/createRoom',auth, chatroom.createRoom);
 router.post('/chat/findChatroom',auth, chatroom.findChatroom, resp);
+router.post('/chat/chatStatus',auth, chatroom.chatStatus, resp);
 router.post('/chat/getRoomPeople',auth, chatroom.getRoomPeople);
 router.post('/chat/sendMessage',auth, chatroom.sendMessage);
 

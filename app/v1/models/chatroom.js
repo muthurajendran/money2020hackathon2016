@@ -33,9 +33,9 @@ chatroomSchema.methods.createRoom = function() {
       .then(function(value) {
         logger.info(value);
 
-        self.roomName = params.name,
-        self.roomHost = params.host,
-        self.roomService = params.service
+        self.roomName = params.name;
+        self.roomHost = params.host;
+        self.roomService = params.service;
 
         return self.save();
       })
@@ -46,7 +46,7 @@ chatroomSchema.methods.createRoom = function() {
         reject({message: 'unable to create room' + err.toString()});
       });
     });
-  }
+  };
 
 module.exports = mongoose.model('Chatroom', chatroomSchema);
 

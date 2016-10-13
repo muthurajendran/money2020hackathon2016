@@ -6,32 +6,56 @@ var config = require('server/config/environment');
 var uuid = require('node-uuid');
 var User = require('../models/user');
 var logger = require('app/v1/middlewares/elog');
-var _ = require('lodash');
+// var _ = require('lodash');
 
 var object = {
-  createRoom: function(req, res, next) {
+  /*
+  * Api for chat status - It'll send a message to the group when somebody leaves
+  * or joins or pauses in the group
+  * 0 - Leave, 1 - Join, 2 - Pause 
+  */
+
+  chatStatus: function(req, res, next) {
+    var options = {
+      0: 'LEFT',
+      1: 'JOIN',
+      2: 'PAUSE' 
+    };
+
     try {
-      var params = {
-        name: uuid.v4(),
-        service: config.ejabberd.service + '.' + config.ejabberd.host,
-        host: config.ejabberd.host
+      // Message information
+      var acknowledge = req.body.type;
+      var subject = options[acknowledge];
+      var body = req.user.jabberId;
+      // Room information
+      var roomId = req.body.roomId;
+      var room_name = roomId.split('@')[0];
+      var room_service = roomId.split('@')[1];
+
+      // Params for sending message
+      var params_message = {
+        type: 'groupchat',
+        from: 'admin@104.154.120.49',
+        to: roomId,
+        subject: subject,
+        body: body
       };
 
-      ejabberd.createChatroom(params)
-      .then(function(value) {
-        logger.info(value);
-        var chatroom = new Chatroom({
-          roomName: params.name,
-          roomHost: params.host,
-          roomService: params.service
-        });
-        return chatroom.save();
+      // params for retrieving users list from the cahtroom
+      var params_room_list = {
+        name: room_name,
+        service: room_service
+      };
+      // send message to the chatroom
+      ejabberd.sendMessage(params_message)
+      .then(function() {
+        // once sent - get all the users from the chatroom 
+        return ejabberd.getRoomUsers(params_room_list);
       })
-      .then(function(chatroom) {
-        res.json({
-          success: true,
-          data: chatroom
-        });
+      .then(function(users) {
+        // get users from the jabberid retured from the room
+        req.response = users;
+        next();
       })
       .catch(function(err) {
         return next({error: 'ERROR', message: err });
@@ -49,6 +73,7 @@ var object = {
       // find all users within the radius set
       var user = req.user;
       var radius = req.body.radius || config.defaultRadiusForChat || 3;
+      // Get all users 
       User.find({
         _id: { $ne: user._id},
         chatroomId: { $exists: true},
@@ -57,9 +82,12 @@ var object = {
       .populate('chatroomId')
       .then(function(users) { 
         if (users.length > 0) {
+          // TODO: More users - so try to find the proper or merge rooms 
+          // for now return the first user
           req.response = users[0].chatroomId;
           next();
         } else {
+          // Nor rooms found - create new
           // create a chatroom and then shoot the id
           var chatroom = new Chatroom();
           chatroom.createRoom()
@@ -76,13 +104,6 @@ var object = {
       .catch(function(err) {
         return next({error: 'ERROR', message: err });
       });
-
-      // get the chatroom of the closest user
-
-      // if not available try to get the closest in next users
-
-      // if found return the chatroom id
-
     } catch (err) {
       return next({error: 'ERROR', message: err.stack});
     }
@@ -95,7 +116,6 @@ var object = {
   getRoomPeople: function(req, res, next) {
     try {
       // find all users within the radius set
-      var user = req.user;
       var roomId = req.body.roomId;
       var room_name = roomId.split('@')[0];
       var room_service = roomId.split('@')[1];
@@ -129,9 +149,9 @@ var object = {
   sendMessage: function(req, res, next) {
     try {
       // find all users within the radius set
-      var user = req.user;
+
       var roomId = req.body.roomId;
-      var type = 'groupchat'
+      var type = 'groupchat';
 
       var params = {
         type: type,
@@ -155,7 +175,40 @@ var object = {
     } catch (err) {
       return next({error: 'ERROR', message: err.stack});
     }
+  },
+
+  createRoom: function(req, res, next) {
+    try {
+      var params = {
+        name: uuid.v4(),
+        service: config.ejabberd.service + '.' + config.ejabberd.host,
+        host: config.ejabberd.host
+      };
+
+      ejabberd.createChatroom(params)
+      .then(function(value) {
+        logger.info(value);
+        var chatroom = new Chatroom({
+          roomName: params.name,
+          roomHost: params.host,
+          roomService: params.service
+        });
+        return chatroom.save();
+      })
+      .then(function(chatroom) {
+        res.json({
+          success: true,
+          data: chatroom
+        });
+      })
+      .catch(function(err) {
+        return next({error: 'ERROR', message: err });
+      });
+    } catch (err) {
+      return next({error: 'ERROR', message: err.stack});
+    }
   }
+
 
 };
 
