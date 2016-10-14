@@ -20,6 +20,7 @@
   "license": "ISC",
   "homepage": "https://bitbucket.org/muthurajendran/pinguin-backend#readme",
   "dependencies": {
+    "@google/maps": "^0.2.1",
     "apn": "^2.1.0",
     "app-module-path": "^1.1.0",
     "authy": "^1.2.0",
