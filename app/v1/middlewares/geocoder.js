@@ -10,9 +10,11 @@ var googleMapsClient = require('@google/maps').createClient({
 var Promise = require('promise');
 
 function processdata(data) {
+  console.log(data);
   return new Promise(function(resolve) {
     var results = {
       neighborhood: [],
+      sublocality: [],
       city: []
     };
 
@@ -27,6 +29,9 @@ function processdata(data) {
         }
         
         if (component.types.indexOf('locality') !== -1) {
+          results.city.push(component.long_name);
+        }
+        if (component.types.indexOf('sublocality') !== -1) {
           results.city.push(component.long_name);
         }
       }
@@ -45,13 +50,16 @@ module.exports = {
       googleMapsClient.reverseGeocode({
         latlng: [latitude, longitude],
         location_type: ['APPROXIMATE'],
-        result_type: ['neighborhood'],
+        result_type: ['neighborhood','sublocality'],
       }, function(err, response) {
+        console.log(response.json.results);
         if (!err) {
           return processdata(response.json.results)
           .then(function(results) {
             if (results.neighborhood.length >= 1) {
               resolve(results.neighborhood[0]);
+            } else if (results.sublocality.length >= 1) {
+              resolve(results.sublocality[0]);
             } else {
               resolve(results.city[0]);
             }
