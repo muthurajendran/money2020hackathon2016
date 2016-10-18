@@ -24,10 +24,10 @@ var all = {
     defaultRadiusForChat: 3,
 
     ejabberd: {
-        host: '104.154.120.49',
+        host: '104.197.97.41',
         port: 4560,
         service: 'conference',
-        userHost: '104.154.120.49',
+        userHost: '104.197.97.41',
         userPassword: 'pinguin'
     },
 
@@ -44,8 +44,8 @@ var all = {
     },
 
     gcloud:{
-        "CLOUD_BUCKET": "pinguindev-142418",
-        "GCLOUD_PROJECT": "pinguindev-142418",
+        "CLOUD_BUCKET": "pinguin-146817",
+        "GCLOUD_PROJECT": "pinguin-146817",
         "key": "AIzaSyA9t38XAVh8xeZU3w_vsTepG090q4tAysc"
     },
     
