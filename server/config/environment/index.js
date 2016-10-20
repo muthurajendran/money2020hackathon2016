@@ -39,14 +39,14 @@ var all = {
         provider: 'google',
         // Optional depending on the providers 
         httpAdapter: 'https', // Default 
-        apiKey: 'AIzaSyA9t38XAVh8xeZU3w_vsTepG090q4tAysc',
+        apiKey: 'AIzaSyCEsN6EEn1o9YFWNOBL6h31kOyY43qZdbE',
         formatter: null
     },
 
     gcloud:{
         "CLOUD_BUCKET": "pinguin-146817",
         "GCLOUD_PROJECT": "pinguin-146817",
-        "key": "AIzaSyA9t38XAVh8xeZU3w_vsTepG090q4tAysc"
+        "key": "AIzaSyCEsN6EEn1o9YFWNOBL6h31kOyY43qZdbE"
     },
     
     twilio: {
@@ -65,13 +65,6 @@ var all = {
     secrets: {
         session: 'pinguinBackendIAuthorizeAllRequests'
     },
-
-    firebase: {
-	    apiKey: "AIzaSyD7QxcBNYgPOvnfOS2XYtwfSTIFoBIDKOY",
-	    authDomain: "pinguin-f2b35.firebaseapp.com",
-	    databaseURL: "https://pinguin-f2b35.firebaseio.com",
-	    storageBucket: "pinguin-f2b35.appspot.com",
-  	},
 
     // List of user roles
     userRoles: ['guest', 'user', 'admin'],
