@@ -14,7 +14,7 @@ var photoSchema = new Schema({
       type: { type: String, default: 'Point' },
       coordinates: {type: [Number], default: [0,0] }
     },
-
+    photo_type: String,
     reactions: {
       thumbsUp: [{ type: Schema.Types.ObjectId, ref: 'User', default: [] }],
       sad: [{ type: Schema.Types.ObjectId, ref: 'User', default: [] }],

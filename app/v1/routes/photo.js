@@ -15,6 +15,7 @@ var object = {
             type: 'Point',
             coordinates: [req.body.longitude,req.body.latitude],
           },
+          photo_type: req.body.type || '',
           userId: req.user._id.toString()
         });
 
