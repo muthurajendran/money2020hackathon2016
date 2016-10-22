@@ -37,4 +37,5 @@ router.post('/chat/sendMessage',auth, chatroom.sendMessage);
 
 // test
 router.post('/test', test.test);
+router.get('/test', test.test);
 module.exports = router;
